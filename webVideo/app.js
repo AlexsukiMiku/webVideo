@@ -28,7 +28,7 @@ database : 'videodb'
 //执行创建连接 
 connection.connect();
 var  sql = 'SELECT * FROM name';
-var  addSql = 'INSERT INTO name(id,name,sex) VALUES(?,?,?)';
+
 
 //视图层的定义
 app.set('views', path.join(__dirname, 'views'));

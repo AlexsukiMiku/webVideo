@@ -17,20 +17,28 @@ database : 'videodb'
 //执行创建连接 
 connection.connect();
 
-
 var  sql = 'SELECT * FROM user';
 router.get('/', function(req, res, next){
     res.render('register');//返回注册模板
   });
 
+
 router.post('/regData', function(req, res, next){
+
     if (!req.body) return res.sendStatus(400);
- 
-    console.log('Username: ' + req.body.username);
+     console.log('Username: ' + req.body.username);
     console.log('Password: ' + req.body.password);
-
-
+    
     //res.send('Welcome, ' + req.body.username);
+    var uname=req.body.username;
+    var pwd=req.body.password;
+    var user={password:pwd,name:uname};
+    connection.query('INSERT INTO user set ?',user,function (err,rs) {
+      if (err) throw err;
+      console.log('ok');
+      //res.render('login');
+    })
+
     connection.query(sql,function (err, result) {
         if(err){
           console.log('[SELECT ERROR] - ',err.message);
@@ -39,7 +47,5 @@ router.post('/regData', function(req, res, next){
         //把搜索值输出
        res.send(result);
     });
-
-
 });
 module.exports = router;

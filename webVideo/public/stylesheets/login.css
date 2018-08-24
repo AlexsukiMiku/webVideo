@@ -1,5 +1,5 @@
 body{
-    background: url("../img/1.jpg");
+    background: url("../img/z1.jpg");
     animation-name:myfirst;
     animation-duration:12s;
     /*变换时间*/
@@ -12,10 +12,10 @@ body{
 }
 @keyframes myfirst
 {
-    0%   {background:url("../images/1.jpg");}
-    34%  {background:url("../images/2.jpg");}
-    67%  {background:url("../images/3.jpg");}
-    100% {background:url("../images/4.jpg");}
+    0%   {background:url("../images/z1.jpg");}
+    34%  {background:url("../images/z2.jpg");}
+    67%  {background:url("../images/z3.jpg");}
+    100% {background:url("../images/z4.jpg");}
 }
 .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
 /*阴影*/

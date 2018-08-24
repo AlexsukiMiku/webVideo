@@ -4,6 +4,7 @@ var router = express.Router();
 /* GET home page. */
 
 router.get('/', function(req, res, next){
-  res.redirect('register');//重定向至注册页面
+  //res.redirect('login');//重定向至注册页面
+  res.render('index');
 });
-module.exports = router;
+module.exports = router; 
