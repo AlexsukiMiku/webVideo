@@ -12,7 +12,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
-
+var subRouter = require('./routes/sub');
+var videoRouter = require('./routes/video');
 var app = express();
 
 //数据库定义
@@ -49,8 +50,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login',loginRouter);
 app.use('/register',registerRouter);
-
-
+app.use('/sub',subRouter);
+app.use('/video',videoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
