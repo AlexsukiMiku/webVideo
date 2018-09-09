@@ -21,13 +21,28 @@ router.post('/',function(req,res,next){
     var uname=req.body.username;
     var pwd=req.body.password;
     var user={password:pwd,name:uname};
-    connection.query('SELECT * FROM user where name=q',function(err,result){
-      if(err){
-        console.log('[SELECT ERROR] - ',err.message);
-        return;
-      }
-      res.send(result)
+    var data={};
+    connection.query('select * from user where name = "'+uname+'";',function(err,rows,result){
+      if(rows.length==0){
+          data.type='fail';
+          data.message = "用户名或密码错误";
+          res.json({status: 200, data});
+       }else{
+    		 if(rows[0].password == pwd){
+    			data.type = "success";
+                data.message = "登录成功！";
+                req.session.userName=rows[0].name;
+                req.body.username=rows[0].name;
+                res.redirect('/');
+    		 }else{
+    			data.type = "fail";
+                data.message = "用户名或密码错误";
+                res.json({status: 200, data});
+    		}
+    	}
+
     });
+
 });
 
 

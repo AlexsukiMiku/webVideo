@@ -6,11 +6,11 @@ var router = express.Router();
 var mysql      = require('mysql');
 //创建连接
 var connection = mysql.createConnection({
-host     : 'localhost',
-user     : 'root',
-password : 'zysZYS123545*',
-database : 'videodb'
-});
+	host     : 'localhost',
+	user     : 'root',
+	password : 'wadym686680*#',
+	database : 'videodb'
+	});
 //执行创建连接 
 connection.connect();
 
@@ -41,6 +41,15 @@ router.post('/result',function(req,res,next){
 		}
 		var inputResult = string2.split('+');
 		doSearch(inputResult);
+		// console.log(str);
+		// if(str != null){
+		// 	/* 生成链接页面的方法 */
+		// 	res.send(str);
+		// 	// res.render('sub');
+		// }
+		// else{
+		// 	res.send('本站没有关于'+searchVar+'的内容！');
+		// }
 	}
 	else{
     res.send('请输入要搜索的关键字!');
@@ -50,12 +59,13 @@ router.post('/result',function(req,res,next){
   function doSearch(inputResult){
 		console.log('进入搜索');
 		var tmpStr = '';
-		var sql = 'SELECT * FROM pages WHERE title LIKE "%'+inputResult[0]+'%"';
+		var sql = 'SELECT * FROM pages WHERE (title LIKE "%'+inputResult[0]+'%" OR title LIKE "'+inputResult[0]+'%" OR title LIKE "%'+inputResult[0]+'" OR title LIKE "'+inputResult[0]+'")';
 		var length1 = inputResult.length;
+		var stringr='';
 		tmpStr += sql;
 		/* 可加入逻辑关系判断 */
 		for(var i = 1; i < length1; i++){
-			tmpStr += ' AND title LIKE "%'+inputResult[i]+'%"';
+			tmpStr += ' AND (title LIKE "%'+inputResult[i]+'%" OR title LIKE "'+inputResult[i]+'%" OR title LIKE "%'+inputResult[i]+'" OR title LIKE "'+inputResult[i]+'")';
     }
     console.log(tmpStr)
 		connection.query(tmpStr,function(err,result){
@@ -72,6 +82,7 @@ router.post('/result',function(req,res,next){
 			res.render('sub',{list:list})
 
 		});
+		// connection.end();
   }
 });
 

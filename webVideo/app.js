@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 var logger = require('morgan');
 var ejs = require('ejs');
 
@@ -14,6 +16,7 @@ var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var subRouter = require('./routes/sub');
 var videoRouter = require('./routes/video');
+var liveRouter = require('./routes/live');
 var app = express();
 
 //数据库定义
@@ -38,13 +41,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', ejs.__express);
 app.set('view engine', 'html');
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//session配置
+var identityKey = 'skey';
+app.use(session({
+  name: identityKey,
+  secret: 'Alex', // 用来对session id相关的cookie进行签名
+  store: new FileStore(), // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+  saveUninitialized: false, // 是否自动保存未初始化的会话，建议false
+  resave: false, // 是否每次都重新保存会话，建议false
+  cookie: {
+    maxAge: 10000 * 1000 // 有效期，单位是毫秒
+  }
+}));
 //路由注册
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -52,11 +66,18 @@ app.use('/login',loginRouter);
 app.use('/register',registerRouter);
 app.use('/sub',subRouter);
 app.use('/video',videoRouter);
+app.use('/live',liveRouter);
+
+app.get('/logout', function (req, res) {
+  req.session.userName = null; // 删除session
+  res.redirect('/');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {

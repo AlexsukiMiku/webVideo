@@ -95,6 +95,108 @@ body {
 .account_desc li a:hover{
 	color:#FFF;
 }
+
+
+.login_account_desc{
+	float:right;
+}
+.login_account_desc li{
+	display:inline;
+	border-left: 2px ridge #3D3B3B;
+}
+.login_account_desc li:first-child{
+	border:none;
+}
+.login_account_desc li a{
+	font-size:0.823em;
+	color:#9C9C9C;
+	padding:0 10px;
+	font-family: 'ambleregular';
+	 -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+.login_account_desc li a:hover{
+	color:#FFF;
+}
+
+
+
+.client {
+	float:left;
+	width:8%;
+	margin-right:7%;
+}
+.client img {
+	width:100%;
+	border-radius:50%;
+	-web-kit-border-radius:50%;
+	-o-border-radius:50%;
+	-ms-border-radius:50%;	
+}
+.client-message {
+	float:left;
+	width:70%;
+}
+.comments h5 {
+	color: #000000;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.comment{
+	margin-top:2em;
+	padding-top:2em;
+	border-top:1px solid #eee;
+}
+.client-message h6 {
+	color:#999999;
+	font-size:1em;
+	font-weight:400;
+	line-height:1.7em;
+	margin-top:0.8em;
+	    font-family: 'Open Sans', sans-serif;
+}
+.client-message p a {
+	color:#333333;
+	letter-spacing:1px;
+	font-size:1.1em;
+	font-weight:700;
+	text-transform:uppercase;
+	margin-right:1em;
+}
+.comments textarea {
+	border: 1px solid #eee;
+	border-left: none;
+	border-right: none;
+	width: 100%;
+	display: block;
+	outline: none;
+	font-size: 16px;
+	color: #cccccc;
+	font-weight: 500;
+	padding: 35px 15px 20px 110px;
+	resize: none;
+	margin: 2em 0;
+	font-style: italic;
+	font-family: 'Playfair Display', serif;
+	font-size: 1em;
+	background: url(../images/c3.jpg) no-repeat 0px 14px;
+}
+.blog-posts iframe {
+	width:100%;
+	height:400px;
+}
+.client-message i.fa.fa-calendar {
+	font-size: 10px;
+	margin-right: 6px;
+	vertical-align: baseline;
+}
+
+
+
+
 .tlinks{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}
 .header_top {
 	padding:20px 0;

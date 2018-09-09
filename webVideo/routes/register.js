@@ -24,11 +24,7 @@ router.get('/', function(req, res, next){
 
 
 router.post('/regData', function(req, res, next){
-
     if (!req.body) return res.sendStatus(400);
-     console.log('Username: ' + req.body.username);
-    console.log('Password: ' + req.body.password);
-    
     //res.send('Welcome, ' + req.body.username);
     var uname=req.body.username;
     var pwd=req.body.password;
@@ -36,16 +32,18 @@ router.post('/regData', function(req, res, next){
     connection.query('INSERT INTO user set ?',user,function (err,rs) {
       if (err) throw err;
       console.log('ok');
-      //res.render('login');
+      req.session.userName=uname;
+      res.redirect('/');
     })
 
-    connection.query(sql,function (err, result) {
-        if(err){
-          console.log('[SELECT ERROR] - ',err.message);
-          return;
-        }
-        //把搜索值输出
-       res.send(result);
-    });
+    // connection.query(sql,function (err, result) {
+    //     if(err){
+    //       console.log('[SELECT ERROR] - ',err.message);
+    //       return;
+    //     }
+    //     //把搜索值输出
+    //    req.session.userName=uname;
+    //    res.redirect('/');
+    // });
 });
 module.exports = router;
