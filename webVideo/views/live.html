@@ -7,7 +7,9 @@
 <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script> 
 <script type="text/javascript" src="js/move-top.js"></script>
 <script type="text/javascript" src="js/easing.js"></script>
-<script src="//nos.netease.com/vod163/nePublisher.min.js"></script>
+<script src="http://cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
+<link href="/sdk/neplayer.min.css" rel="stylesheet">
+<script src="/sdk/neplayer.min.js"></script>
 </head>
 <body>
 	<div class="header">
@@ -15,19 +17,25 @@
 			<div class="wrap">
 				<div class="nav_list">
 					<ul>
-						<li><a href="index.html">主页</a></li>
+						<li><a href="/">主页</a></li>
 					
-						<li><a href="contact.html">联系我们</a></li>
+						<li><a href="/contact">联系我们</a></li>
 					</ul>
 				</div>
-					<div class="account_desc">
-						<ul>
-							<li><a href="contact.html">注册</a></li>
-							<li><a href="contact.html">登陆</a></li>
-							
-							<li><a href="#">My Account</a></li>
-						</ul>
-					</div>
+				<%  if(name){%>
+					<div class="login_account_desc" >
+							<ul>
+								<li><a href="/users/<%=name%>">Welcome:<%=name%> </a></li>
+								<li><a href="/logout">退出登录</a></li>
+							</ul>
+					</div><%}else{%>
+						<div class="account_desc" >
+								<ul>
+									<li id="hello"><a href="/register">注册</a></li>
+									<li><a href="/login">登陆</a></li>
+								</ul>
+					   </div>
+				<%}%>
 				<div class="clear"></div>
 			</div>
 	  	</div>
@@ -38,11 +46,7 @@
 					</div>
 						<div class="header_top_right">
 						  
-							  <div class="search_box">
-					     		<form>
-					     			<input type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"><input type="submit" value="">
-					     		</form>
-					     	</div>
+							 
 						 <div class="clear"></div>
 					</div>
 			   <div class="clear"></div>
@@ -51,51 +55,29 @@
    </div>
    <div class="main">
    	 <div class="wrap">
-   	 	<div class="content_top">
-    		<div class="back-links">
-    		<p><a href="index.html">主页</a> &gt;&gt;&gt;&gt; <a href="#" class="active">视频简介</a></p>
-    	    </div>
-    		<div class="clear"></div>
-    	</div>
+			<h3 id=people>当前在线人数：<span id="allpeople"></span> </h3>
+			<h6 id="alert" >直播人数已达上限</h6>
+			<script>
+			$(document).ready(function () {
+				 // 创建链接
+				document.getElementById("alert").style.display="none";
+                var socket = io.connect('http://localhost:8080');
+                socket.on('stats', function(data) {
+				console.log('Connected clients111:', data.numClients);
+				if(data.numClients===100){
+					document.getElementById("my-video").style.display="none";//隐藏
+					document.getElementById("people").style.display="none";
+					document.getElementById("alert").style.display="block";
+				}else{
+				$('#allpeople').text(data.numClients);
+				}
+                });
+        });
+			</script>
    	 	<div class="section group">
-
-				<div id="my-publisher">
-
-				</div>
-				<script>
-				   var myPublisher = new nePublisher(
-    'my-publisher', // String 必选 推流器容器id
-    {   // Object 可选 推流初始化videoOptions参数
-        videoWidth: 640,    // Number 可选 推流分辨率 宽度 default 640
-        videoHeight: 480,   // Number 可选 推流分辨率 高度 default 480
-        fps: 15,            // Number 可选 推流帧率 default 15
-        bitrate: 600,       // Number 可选 推流码率 default 600
-        video: true,       // Boolean 可选 是否推流视频 default true
-        audio: true       // Boolean 可选 是否推流音频 default true
-    }, { // Object 可选 推流初始化flashOptions参数
-        previewWindowWidth: 862,    // Number 可选 预览窗口宽度 default 862
-        previewWindowHeight: 486,   // Number 可选 预览窗口高度 default 446
-        wmode: 'transparent',       // String 可选 flash显示模式 default transparent
-        quality: 'high',            // String 可选 flash质量 default high
-        allowScriptAccess: 'always' // String 可选 flash跨域允许 default always
-    }, function() {
-        /*
-            function 可选 初始化成功的回调函数
-            可在该回调中调用getCameraList和getMicroPhoneList方法获取 摄像头和麦克风列表
-            cameraList = this.getCameraList();
-            microPhoneList = this.getMicroPhoneList();
-        */
-
-    }, function(code, desc) {
-        /*
-            function 可选 初始化失败后的回调函数
-            @param code 错误代码
-            @param desc 错误信息
-            判断是否有错误代码传入检查初始化时是否发生错误
-            若有错误可进行相应的错误提示
-        */
-});
-				</script>
+			<video id="my-video" class="video-js vjs-big-play-centered"  x-webkit-airplay="allow" webkit-playsinline controls poster="poster.png" preload="auto" width="1050" height="560" data-setup="{}">
+				<source src="rtmp://va40c1c90.live.126.net/live/85d6a903c35e4237943b07f64dff1d27" type="rtmp/flv">
+			</video>
         </div>
    <div class="footer">
    	  <div class="wrap">	
@@ -107,25 +89,16 @@
 						<li><a href="#">Customer Service</a></li>
 						<li><a href="#">Advanced Search</a></li>
 						<li><a href="#">Orders and Returns</a></li>-->
-						<li><a href="contact.html">Contact Us</a></li>
+						<li><a href="/contact">Contact Us</a></li>
 						</ul>
 					</div>
-				<div class="col_1_of_4 span_1_of_4">
-					<h4>Why buy from us</h4>
-						<ul>
-						<li><a href="#">About Us</a></li>
-						<li><a href="#">Customer Service</a></li>
-						<li><a href="#">Privacy Policy</a></li>
-						<li><a href="contact.html">Site Map</a></li>
-						<li><a href="#">Search Terms</a></li>
-						</ul>
-				</div>
+			
 				<div class="col_1_of_4 span_1_of_4">
 					<h4>我的账户</h4>
 						<ul>
-							<li><a href="contact.html">登陆</a></li>
-							<li><a href="index.html">主站</a></li>
-							<li><a href="contact.html">联系我们</a></li>
+							<li><a href="/contact">登陆</a></li>
+							<li><a href="/index">主站</a></li>
+							<li><a href="/contact">联系我们</a></li>
 						</ul>
 				</div>
 				<div class="col_1_of_4 span_1_of_4">

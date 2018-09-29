@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设置新密码</title>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <link rel="stylesheet" href="/stylesheets/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form row">
+            <div class="form-horizontal col-md-offset-3" id="login_form">
+                <h3 class="form-title">设置新密码</h3>
+                    <form id="form_reset">
+                        <div class="col-md-9">
+        
+                            <div class="form-group">
+                                    <i class="fa fa-lock fa-lg"></i>
+                                    <input class="form-control required" type="password" placeholder="6-18位，字母开头" id="password" name="password" maxlength="8"/>
+                            </div>
+                            <div class="form-group">
+                                <i class="fa fa-lock fa-lg"></i>
+                                <input class="form-control required" type="password" placeholder="确认密码" id="repeatPassword" name="repeatPassword" maxlength="8"/>
+                        </div>
+                            
+                            
+                            <div class="form-group col-md-offset-9">
+                                <button id="btnSubmit" type="submit" class="btn btn-success pull-right" name="submit">设置新密码</button>
+                            </div>
+                    </form>
+                    <script>
+         $('#btnSubmit').on('click',function(event){
+            event.preventDefault();
+
+            if ($('#password').val().trim().length < 1) {
+                layer.msg('请填写密码！');
+                $('#password').focus();
+                return;
+            }
+            var pass = /^[a-zA-Z]\w{5,17}$/;
+            var input2 = $('#password').val();
+            if(!pass.test(input2)){
+                layer.msg('密码长度要在6~18位之间,且必须以字母开头！')
+                return;
+
+            }
+            if ($('#repeatPassword').val().trim().length < 1) {
+                layer.msg('请填写确认密码！');
+                $('#repeatPassword').focus();
+                return;
+            }
+
+            if (($('#repeatPassword').val().trim())!=($('#password').val().trim())) {
+                layer.msg('两次密码填写不一致！');
+                $('#repeatPassword').focus();
+                return;
+            }
+            // if ($('#yzm').val().trim().length < 1) {
+            //     layer.msg('请填写验证码！');
+            //     $('#yzm').focus();
+            //     return;
+            // }
+
+            $.post('/login/newpwd', $('#form_reset').serialize(), function(res) {
+                if(res.code == 200){
+                    setTimeout(function(){
+                        location.href = '/login';
+                    },2000);
+                    layer.msg('密码修改成功')
+                }else{
+                    layer.msg(res.data.message)
+                }
+
+            })
+
+        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

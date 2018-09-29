@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<head>
+<title>publish</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/css/slider.css" rel="stylesheet" type="text/css" media="all"/>
+<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script> 
+<script type="text/javascript" src="/js/move-top.js"></script>
+<script type="text/javascript" src="/js/easing.js"></script>
+<script type="text/javascript" src="/js/jquery.nivo.slider.js"></script>
+<script src="//nos.netease.com/vod163/nePublisher.min.js"></script>
+<style type="text/css">
+    .m-input {
+        margin-bottom: 10px;
+    }
+    .u-input-name {
+        display: inline-block;
+        width: 85px;
+    }
+    .u-input {
+        width: 500px;
+        height: 25px;
+        border: none;
+        border-bottom: 1px solid #000;
+        outline: none;
+        color: #000;
+    }
+    .testBtn {
+        width: 150px;
+    }
+    .u-status {
+        margin-left: 10px;
+        display: inline-block;
+    }
+</style>
+</head>
+<body>
+	<div class="header">
+		 <div class="headertop_desc">
+			<div class="wrap">
+				<div class="nav_list">
+					<ul>
+							<li><a href="/">主站</a></li>
+							<li><a href=#>直播</a></li>
+							<li><a href="/contact.html">联系我们</a></li>
+					</ul>
+				</div>
+                <%  if(name){%>
+					<div class="login_account_desc" >
+							<ul>
+								<li><a href="/users">Welcome:<%=name%> </a></li>
+								<li><a href="/logout">退出登录</a></li>
+							</ul>
+					</div><%}else{%> 
+						<div class="account_desc" >
+								<ul>
+									<li id="hello"><a href="register">注册</a></li>
+									<li><a href="login">登陆</a></li>
+								</ul>
+					   </div>
+				<%}%>
+				<div class="clear"></div>
+			</div>
+	  	</div>
+  	  		<div class="wrap">
+				<div class="header_top">
+					<div class="logo">
+						<a href="/"><img src="/images/logo.jpg" alt="" /></a>
+					</div>
+						<div class="header_top_right">
+						  <!--<div class="cart">
+						  	   <p><span>Cart</span><div id="dd" class="wrapper-dropdown-2"> (empty)
+						  	   	<ul class="dropdown">
+										<li>you have no items in your Shopping cart</li>
+								</ul></div></p>
+						  </div>-->
+							  <div class="search_box">
+									<form action="/result"  method="POST">
+										<input type="text" name="research" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"><input type="submit" value="">
+									</form>
+					     	</div>
+						 <div class="clear"></div>
+					</div>
+			 <div class="clear"></div>
+  		</div>     
+				
+   <!------------End Header ------------>
+  <div class="main">
+  	<div class="wrap">
+      <div class="content">
+        <h1>NePublisher</h1>
+    <div class="m-input">
+        <span class="u-input-name">摄像头：</span>
+        <select class="u-input" id="cameraSelect">
+        </select>
+    </div>
+    <div class="m-input">
+        <span class="u-input-name">麦克风：</span>
+        <select class="u-input" id="microPhoneSelect">
+        </select>
+    </div>
+    <div class="m-input">
+        <span class="u-input-name">清晰度：</span>
+        <select class="u-input" id="qualitySelect">
+            <option value="0">流畅（480*360@20）</option>
+            <option value="1">标清（640*480@20）</option>
+            <option value="2">高清（960*540@20）</option>
+        </select>
+    </div>
+    <div class="m-input">
+        <span class="u-input-name">推流地址：</span>
+        <input class="u-input" type="text" id="publishUrl">
+    </div>
+    <div class="m-input">
+        <button class="button button-primary button-rounded testBtn" id="previewBtn" onclick="startPreview()">预览</button>
+        <button class="button button-primary button-rounded testBtn" id="publishBtn" onclick="startPublish()">开始直播</button>
+        <span class="u-status"></span>
+    </div>
+    <div id="my-publisher"></div>
+    <script type="text/javascript">
+        var cameraList,
+            microPhoneList,
+            cameraOptions = '',
+            microPhoneOptions = '';
+        var publishBtn = document.getElementById('publishBtn');
+        var previewBtn = document.getElementById('previewBtn')
+        var testInput = document.getElementsByClassName('u-input');
+        var myPublisher = new nePublisher('my-publisher', {
+                //viewOptions
+                videoWidth: 960,
+                videoHeight: 540,
+                fps: 20,
+                bitrate: 1500
+            }, {
+                //flashOptions
+                previewWindowWidth: 862,
+                previewWindowHeight: 486,
+                wmode: 'transparent',
+                quality: 'high',
+                allowScriptAccess: 'always'
+            }, function() {
+                cameraList = this.getCameraList();
+                microPhoneList = this.getMicroPhoneList();
+                console.log(cameraList, microPhoneList);
+                for (var i = cameraList.length - 1; i >= 0; i--) {
+                    cameraOptions = '<option value="' + i + '">' + cameraList[i] + '</option>' + cameraOptions;
+                }
+                for (var i = microPhoneList.length - 1; i >= 0; i--) {
+                    microPhoneOptions = '<option value="' + i + '">' + microPhoneList[i] + '</option>' + microPhoneOptions;
+                }
+                document.getElementById("cameraSelect").innerHTML = cameraOptions;
+                document.getElementById("microPhoneSelect").innerHTML = microPhoneOptions;
+            }, function(code, desc) {
+                console.log(code, desc);
+            });
+        var qualityList = [
+            {
+                //流畅
+                fps: 20,
+                bitrate: 600,
+                videoWidth:480,
+                videoHeight:360
+            },
+            {
+                //标清
+                fps: 20,
+                bitrate: 800,
+                videoWidth:640,
+                videoHeight:480
+            },
+            {
+                //高清
+                fps: 20,
+                bitrate: 1500,
+                videoWidth:960,
+                videoHeight:540
+            }
+        ];
+        var getCameraIndex = function() {
+            var cameraSelect = document.getElementById("cameraSelect");
+            var cameraIndex = cameraSelect.selectedIndex;
+            return cameraSelect.options[cameraIndex].value;
+        };
+        var getMicroPhoneIndex = function() {
+            var microPhoneSelect = document.getElementById("microPhoneSelect");
+            var microPhoneIndex = microPhoneSelect.selectedIndex;
+            return microPhoneSelect.options[microPhoneIndex].value;
+        };
+        var getQualityOption = function() {
+            var qualitySelect = document.getElementById("qualitySelect");
+            var qualityIndex = qualitySelect.selectedIndex;
+            return qualityList[qualityIndex];
+        };
+        var startPreview = function() {
+            myPublisher.startPreview(getCameraIndex());
+            document.getElementsByClassName('u-status')[0].innerHTML = '预览中';
+        };
+        var startPublish = function() {
+            var publishUrl = document.getElementById("publishUrl").value;
+            startPublishCall();
+            myPublisher.setCamera(getCameraIndex());
+            myPublisher.setMicroPhone(getMicroPhoneIndex());
+            myPublisher.startPublish(publishUrl, getQualityOption(),function(code, desc) {
+                console.log(code, desc);
+                alert(code + '：' + desc);
+                stopPublishCall();
+            });
+        };
+        var stopPublish = function() {
+            myPublisher.stopPublish();
+            stopPublishCall();
+        };
+        var startPublishCall = function() {
+            console.log('推流开始');
+            document.getElementsByClassName('u-status')[0].innerHTML = '直播中';
+            publishBtn.innerHTML = '停止直播';
+            publishBtn.onclick = stopPublish;
+            for (var i = testInput.length - 1; i >= 0; i--) {
+                testInput[i].disabled = true;
+            }
+            previewBtn.disabled = true;
+
+        };
+        var stopPublishCall = function() {
+            console.log('推流结束');
+            document.getElementsByClassName('u-status')[0].innerHTML = '预览中';
+            publishBtn.innerHTML = '开始直播';
+            publishBtn.onclick = startPublish;
+            for (var i = testInput.length - 1; i >= 0; i--) {
+                testInput[i].disabled = false;
+            }
+            previewBtn.disabled = false;
+        };
+    </script>
+
+
+
+
+  </div>
+</div>
+  </div>
+   <div class="footer">
+   	  <div class="wrap">	
+	     <div class="section group">
+				<div class="col_1_of_4 span_1_of_4">
+						<h4>Information</h4>
+						<ul>
+						<!--<li><a href="#">About Us</a></li>
+						<li><a href="#">Customer Service</a></li>
+						<li><a href="#">Advanced Search</a></li>
+						<li><a href="#">Orders and Returns</a></li>-->
+						<li><a href="/contact">Contact Us</a></li>
+						</ul>
+					</div>
+				<!--<div class="col_1_of_4 span_1_of_4">
+					<h4>Why buy from us</h4>
+						<ul>
+						<li><a href="#">About Us</a></li>
+						<li><a href="#">Customer Service</a></li>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="contact.html">Site Map</a></li>
+						<li><a href="#">Search Terms</a></li>
+						</ul>
+				</div>-->
+				<div class="col_1_of_4 span_1_of_4">
+					<h4>我的账户</h4>
+						<ul>
+							<li><a href="/login">登陆</a></li>
+							<li><a href="/">主站</a></li>
+							<li><a href="/contact">联系我们</a></li>
+						</ul>
+				</div>
+				<div class="col_1_of_4 span_1_of_4">
+					<h4>招聘信息</h4>
+						<ul>
+							<li><span>###-###-###</span></li>
+							<li><span>###-###-###</span></li>
+						</ul>
+						<!--<div class="social-icons">
+							<h4>Follow Us</h4>
+					   		  <ul>
+							      <li><a href="#" target="_blank"><img src="images/facebook.png" alt="" /></a></li>
+							      <li><a href="#" target="_blank"><img src="images/twitter.png" alt="" /></a></li>
+							      <li><a href="#" target="_blank"><img src="images/skype.png" alt="" /> </a></li>
+							      <li><a href="#" target="_blank"> <img src="images/linkedin.png" alt="" /></a></li>
+							      <div class="clear"></div>
+						     </ul>
+   	 					</div>-->
+				</div>
+			</div>
+			 <!--<div class="copy_right">
+				<p>Copyright &copy; 2014.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+		   </div>-->			
+        </div>
+    </div>
+    <script type="text/javascript">
+		$(document).ready(function() {			
+			$().UItoTop({ easingType: 'easeOutQuart' });
+			
+		});
+	</script>
+    <a href="#" id="toTop"><span id="toTopHover"> </span></a>
+
+</body>
+</html>

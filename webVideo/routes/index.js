@@ -25,6 +25,9 @@ router.get('/', function(req, res, next){
   res.render('index');
 });
 
+router.get('/contact', function(req, res, next){
+  res.render('contact');
+});
 //搜索功能
 router.post('/result',function(req,res,next){
   var searchVar = req.body.research;
@@ -74,12 +77,14 @@ router.post('/result',function(req,res,next){
 				return;
 			}
 			var list=[];
+			var nameList=[];
 			for(var j = 0; j < result.length; j++){
 				list += result[j].idtitle;
+				nameList[j] = result[j].title;
 			}
-			console.log(list);
+		
 			/* 生成链接页面的方法 */
-			res.render('sub',{list:list})
+			res.render('sub',{list:list,nameList:nameList})
 
 		});
 		// connection.end();

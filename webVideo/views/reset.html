@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>忘记密码？</title>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/login.css">
+    <script src="/layer/layer.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form row">
+            <div class="form-horizontal col-md-offset-3" id="login_form">
+                <h3 class="form-title">重设密码</h3>
+                <form  id="form_reset">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="邮箱" id="username" name="username" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="验证码区分大小写" id="captcha" name="captcha"  maxlength="8"/>
+                    </div>
+                    
+                    <div class="form-group col-md-offset-3">
+                        <button id="btnSend" type="submit" class="btn btn-success pull-left" name="send">发送</button>
+                    </div>
+                    <div class="form-group col-md-offset-9">
+                        <button id="btnLogin" type="submit" class="btn btn-success pull-right" name="submit">验证</button>
+                    </div>
+                   
+                </form>
+                <script>
+            $('#btnSend').on('click',function(event){
+                event.preventDefault();
+                $.post('/login/reset', $('#form_reset').serialize(), function(res) {
+                if(res.code==200){
+                    layer.msg(res.data.message);
+                }else{
+                    layer.msg(res.data.message)
+                }
+            });
+            }) ;     
+
+            $('#btnLogin').on('click',function(event){
+                event.preventDefault();
+                if ($('#username').val().trim().length < 1) {
+                    layer.msg('请填写邮箱');
+                    $('#username').focus();
+                    return;
+                }
+                
+                var reg2 = /^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
+                var input2 = $('#username').val(); 
+                if(!reg2.test(input2)){
+                    layer.msg('请输入正确的邮箱地址！')
+                }
+                
+
+                $.post('/login/check', $('#form_reset').serialize(), function(res) {
+                if(res.code == 200){
+                    setTimeout(function(){
+                        location.href = '/login/newpwd';
+                    },2000);
+                    layer.msg(res.data.message);
+                    
+                }else{
+                   
+                    layer.msg(res.data.message)
+                }
+
+            });
+            });
+                
+                </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

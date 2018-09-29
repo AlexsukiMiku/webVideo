@@ -8,7 +8,6 @@ var logger = require('morgan');
 var ejs = require('ejs');
 
 
-
 //路由路径
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -19,6 +18,10 @@ var videoRouter = require('./routes/video');
 var liveRouter = require('./routes/live');
 var app = express();
 
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+server.listen(8080);
+var numClients = 0;
 //数据库定义
 var mysql      = require('mysql');
 //创建连接
@@ -69,8 +72,25 @@ app.use('/video',videoRouter);
 app.use('/live',liveRouter);
 
 app.get('/logout', function (req, res) {
-  req.session.userName = null; // 删除session
-  res.redirect('/');
+   req.session.destroy(function(err) {
+        if(err){
+          res.json({ret_code: 2, ret_msg: '退出登录失败'});
+          return;
+        }
+        res.clearCookie(identityKey);
+        res.redirect('/');
+      });
+});
+
+io.on('connection', function(socket) {  
+  numClients++;
+  socket.emit('stats', { numClients: numClients });
+  console.log('Connected clients:', numClients);
+  socket.on('disconnect', function() {
+  numClients--;
+  socket.emit('stats', { numClients: numClients });
+  console.log('Connected clients:', numClients);
+});
 });
 
 // catch 404 and forward to error handler

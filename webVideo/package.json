@@ -7,14 +7,20 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "ejs": "^2.6.1",
     "express": "~4.16.0",
     "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
+    "jquery": "^3.3.1",
+    "js-sha1": "^0.6.0",
     "morgan": "~1.9.0",
     "mysql": "^2.16.0",
-    "session-file-store": "^1.2.0"
+    "nodemailer": "^4.6.8",
+    "request": "^2.88.0",
+    "session-file-store": "^1.2.0",
+    "socket.io": "^2.1.1"
   }
 }
